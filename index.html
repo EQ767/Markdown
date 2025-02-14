@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -107,7 +108,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="4em" height="4em" viewBox="0 0 512 512">
           <path fill="currentColor" d="M496.938 14.063c-95.14 3.496-172.297 24.08-231.282 55.812l-29.47 49.28l-4.967-28.093c-10.535 7.402-20.314 15.222-29.314 23.407l-14.687 45.06l-5.032-25.155c-40.65 45.507-60.41 99.864-58.938 155.906c47.273-93.667 132.404-172.727 211.97-221.155l9.717 15.97c-75.312 45.838-156.387 121.202-202.187 208.25h12.156c19.78-12.02 39.16-26.858 58.406-43.44l-30.28 1.595l54.218-23.094c46.875-43.637 93.465-94.974 143.313-138.28l-24.47-5.19l56.5-21.03c26.853-20.485 54.8-37.844 84.344-49.843zM59.53 312.03v30.408H194V312.03zm20.376 49.095L47.25 389.813L24.97 474.78l14.53 15.876h177.22l14.56-15.875L209 389.814l-30.906-28.688H79.906z"/>
         </svg>
-        MD Editor
+        MarkdownE Editor
       </div>
       <div class="header-buttons">
         <button class="toolbar-btn" id="toggleLayout" title="切换布局">
@@ -272,24 +273,21 @@
     });
 
     // 初始化默认内容
-    mdInput.value = `## 欢迎使用
-<details>
-<summary>💭 <b>一些话 (点击展开)</b></summary>
+    mdInput.value = `# MarkdownE  ![ico](data:image/svg+xml;base64,ICAgICAgICA8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjRlbSIgaGVpZ2h0PSI0ZW0iIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4NCiAgICAgICAgICA8cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik00OTYuOTM4IDE0LjA2M2MtOTUuMTQgMy40OTYtMTcyLjI5NyAyNC4wOC0yMzEuMjgyIDU1LjgxMmwtMjkuNDcgNDkuMjhsLTQuOTY3LTI4LjA5M2MtMTAuNTM1IDcuNDAyLTIwLjMxNCAxNS4yMjItMjkuMzE0IDIzLjQwN2wtMTQuNjg3IDQ1LjA2bC01LjAzMi0yNS4xNTVjLTQwLjY1IDQ1LjUwNy02MC40MSA5OS44NjQtNTguOTM4IDE1NS45MDZjNDcuMjczLTkzLjY2NyAxMzIuNDA0LTE3Mi43MjcgMjExLjk3LTIyMS4xNTVsOS43MTcgMTUuOTdjLTc1LjMxMiA0NS44MzgtMTU2LjM4NyAxMjEuMjAyLTIwMi4xODcgMjA4LjI1aDEyLjE1NmMxOS43OC0xMi4wMiAzOS4xNi0yNi44NTggNTguNDA2LTQzLjQ0bC0zMC4yOCAxLjU5NWw1NC4yMTgtMjMuMDk0YzQ2Ljg3NS00My42MzcgOTMuNDY1LTk0Ljk3NCAxNDMuMzEzLTEzOC4yOGwtMjQuNDctNS4xOWw1Ni41LTIxLjAzYzI2Ljg1My0yMC40ODUgNTQuOC0zNy44NDQgODQuMzQ0LTQ5Ljg0M3pNNTkuNTMgMzEyLjAzdjMwLjQwOEgxOTRWMzEyLjAzem0yMC4zNzYgNDkuMDk1TDQ3LjI1IDM4OS44MTNMMjQuOTcgNDc0Ljc4bDE0LjUzIDE1Ljg3NmgxNzcuMjJsMTQuNTYtMTUuODc1TDIwOSAzODkuODE0bC0zMC45MDYtMjguNjg4SDc5LjkwNnoiLz4NCiAgICAgICAgPC9zdmc+)
+---
+一个简洁的HTML Markdown编辑器 
 
-**功能特性：**
+<details>
+<summary>💭 <b>功能特性:</b></summary>
+
 - 实时预览
 - 快捷工具栏
 - 多格式支持
 - 响应式布局
 
-[主页](https://ericq.rth1.xyz/)
-
-\`\`\`javascript
-console.log('Hello Markdown!');
-\`\`\`
-
-![Loading图片测试](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzBweCIgaGVpZ2h0PSIzMHB4IiB2aWV3Qm94PSIwIDAgNDAgNDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDQwIDQwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCiAgPHBhdGggb3BhY2l0eT0iMC4yIiBmaWxsPSIjRkY2NzAwIiBkPSJNMjAuMjAxLDUuMTY5Yy04LjI1NCwwLTE0Ljk0Niw2LjY5Mi0xNC45NDYsMTQuOTQ2YzAsOC4yNTUsNi42OTIsMTQuOTQ2LDE0Ljk0NiwxNC45NDYNCiAgICAgIHMxNC45NDYtNi42OTEsMTQuOTQ2LTE0Ljk0NkMzNS4xNDYsMTEuODYxLDI4LjQ1NSw1LjE2OSwyMC4yMDEsNS4xNjl6IE0yMC4yMDEsMzEuNzQ5Yy02LjQyNSwwLTExLjYzNC01LjIwOC0xMS42MzQtMTEuNjM0DQogICAgICBjMC02LjQyNSw1LjIwOS0xMS42MzQsMTEuNjM0LTExLjYzNGM2LjQyNSwwLDExLjYzMyw1LjIwOSwxMS42MzMsMTEuNjM0QzMxLjgzNCwyNi41NDEsMjYuNjI2LDMxLjc0OSwyMC4yMDEsMzEuNzQ5eiI+PC9wYXRoPg0KICA8cGF0aCBmaWxsPSIjRkY2NzAwIiBkPSJNMjYuMDEzLDEwLjA0N2wxLjY1NC0yLjg2NmMtMi4xOTgtMS4yNzItNC43NDMtMi4wMTItNy40NjYtMi4wMTJoMHYzLjMxMmgwDQogICAgICBDMjIuMzIsOC40ODEsMjQuMzAxLDkuMDU3LDI2LjAxMywxMC4wNDd6IiB0cmFuc2Zvcm09InJvdGF0ZSg0Mi4xMTcxIDIwIDIwKSI+DQogICAgICA8YW5pbWF0ZVRyYW5zZm9ybSBhdHRyaWJ1dGVUeXBlPSJ4bWwiIGF0dHJpYnV0ZU5hbWU9InRyYW5zZm9ybSIgdHlwZT0icm90YXRlIiBmcm9tPSIwIDIwIDIwIiB0bz0iMzYwIDIwIDIwIiBkdXI9IjAuNXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+DQogIDwvcGF0aD4NCjwvc3ZnPg==)
 </details>
+
+*[主页](https://ericq.rth1.xyz/)* *[官网](https://eq767.github.io/MarkdownE/)*
 `;
     mdInput.dispatchEvent(new Event('input'));
   </script>
