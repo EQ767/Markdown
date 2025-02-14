@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eric MD</title>
+  <script src="https://jsdelivr.qaq.qa/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --secondary: #3498db;
+      --danger: #e74c3c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #f8f9fa;
+    }
+    header {
+      background: var(--primary);
+      padding: 8px 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      color: white;
+      font-weight: 500;
+    }
+    .logo svg { margin-right: 10px; }
+    .header-buttons { display: flex; gap: 8px; }
+    .toolbar {
+      display: flex;
+      gap: 4px;
+      padding: 8px;
+      background: white;
+      border-bottom: 1px solid #dee2e6;
+      flex-wrap: wrap;
+    }
+    .toolbar-btn {
+      width: 36px;
+      height: 36px;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .toolbar-btn:hover { background: #f8f9fa; border-color: #adb5bd; }
+    .toolbar-btn.active {
+      background: var(--secondary);
+      border-color: var(--secondary);
+    }
+    .toolbar-btn.active img,
+    .toolbar-btn.active svg { stroke: white; }
+    .container {
+      flex: 1;
+      display: flex;
+      margin: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .container.vertical { flex-direction: column; }
+    .editor, .preview {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .editor { border-right: 1px solid #dee2e6; }
+    textarea {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      resize: none;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    @media (max-width: 768px) {
+      .container { margin: 0; border-radius: 0; }
+      .editor { border-right: 0; border-bottom: 1px solid #dee2e6; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <!-- Logo SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="4em" height="4em" viewBox="0 0 512 512">
+          <path fill="currentColor" d="M496.938 14.063c-95.14 3.496-172.297 24.08-231.282 55.812l-29.47 49.28l-4.967-28.093c-10.535 7.402-20.314 15.222-29.314 23.407l-14.687 45.06l-5.032-25.155c-40.65 45.507-60.41 99.864-58.938 155.906c47.273-93.667 132.404-172.727 211.97-221.155l9.717 15.97c-75.312 45.838-156.387 121.202-202.187 208.25h12.156c19.78-12.02 39.16-26.858 58.406-43.44l-30.28 1.595l54.218-23.094c46.875-43.637 93.465-94.974 143.313-138.28l-24.47-5.19l56.5-21.03c26.853-20.485 54.8-37.844 84.344-49.843zM59.53 312.03v30.408H194V312.03zm20.376 49.095L47.25 389.813L24.97 474.78l14.53 15.876h177.22l14.56-15.875L209 389.814l-30.906-28.688H79.906z"/>
+        </svg>
+        MD Editor
+      </div>
+      <div class="header-buttons">
+        <button class="toolbar-btn" id="toggleLayout" title="切换布局">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <path d="M9 3v18M3 9h18"/>
+          </svg>
+        </button>
+        <button class="toolbar-btn" id="exportBtn" title="导出文件">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M12 3v12m0 0l-4-4m4 4l4-4"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <button class="toolbar-btn" title="加粗" data-md="**|**">
+      <img src="img/B.svg" alt="粗体" width="20" height="20">
+    </button>
+    <button class="toolbar-btn" title="斜体" data-md="*|*">
+      <img src="img/I.svg" alt="斜体" width="20" height="20">
+    </button>
+    <button class="toolbar-btn" title="标题" data-md="# ">
+      <img src="img/H.svg" alt="标题" width="20" height="20">
+    </button>
+    <button class="toolbar-btn" title="链接" data-md="[](url)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/>
+        <line x1="8" y1="12" x2="16" y2="12"/>
+      </svg>
+    </button>
+    <button class="toolbar-btn" title="插入图片" data-md="![图片描述](|)">
+      <img src="img/up.svg" alt="图片" width="20" height="20">
+    </button>
+    <button class="toolbar-btn" title="代码块" data-md="```\n\n```">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M13 19l3-3-3-3M11 5l-3 3 3 3"/>
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+      </svg>
+    </button>
+    <button class="toolbar-btn" title="无序列表" data-md="- ">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="5" cy="12" r="1.5"/>
+        <circle cx="12" cy="12" r="1.5"/>
+        <circle cx="19" cy="12" r="1.5"/>
+      </svg>
+    </button>
+    <button class="toolbar-btn" title="引用" data-md="> ">
+      <img src="img/引.svg" alt="引用" width="20" height="20">
+    </button>
+    <button class="toolbar-btn" id="undoBtn" title="撤回">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <polyline points="11 17 6 12 11 7"/>
+        <path d="M18 17a9 9 0 0 0-9-9H3"/>
+      </svg>
+    </button>
+    <button class="toolbar-btn" id="redoBtn" title="前进">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <polyline points="13 7 18 12 13 17"/>
+        <path d="M6 7a9 9 0 0 1 9 9h3"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="container" id="container">
+    <div class="editor">
+      <textarea id="mdInput" placeholder="开始书写..."></textarea>
+    </div>
+    <div class="preview" id="mdPreview"></div>
+  </div>
+
+  <script>
+    const mdInput = document.getElementById('mdInput');
+    const mdPreview = document.getElementById('mdPreview');
+
+    // 初始化撤销/重做栈
+    let undoStack = [];
+    let redoStack = [];
+    let isUndoRedo = false;
+    let lastValue = mdInput.value;
+
+    // 配置 marked（不启用代码高亮）
+    marked.setOptions({
+      breaks: true
+    });
+
+    // 记录输入，更新预览
+    mdInput.addEventListener('input', () => {
+      if (!isUndoRedo) {
+        undoStack.push(lastValue);
+        redoStack = [];
+      }
+      lastValue = mdInput.value;
+      mdPreview.innerHTML = marked.parse(mdInput.value);
+    });
+
+    // 根据 data-md 属性插入 Markdown 语法
+    function insertText(before, after = '') {
+      const start = mdInput.selectionStart;
+      const end = mdInput.selectionEnd;
+      const text = mdInput.value;
+      const selection = text.substring(start, end);
+      undoStack.push(text);
+      redoStack = [];
+      
+      mdInput.value = text.substring(0, start) + before + selection + after + text.substring(end);
+      mdInput.focus();
+      mdInput.selectionStart = start + before.length;
+      mdInput.selectionEnd = start + before.length + selection.length;
+      mdInput.dispatchEvent(new Event('input'));
+    }
+
+    document.querySelectorAll('.toolbar-btn[data-md]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const [before, after = ''] = btn.dataset.md.split('|');
+        insertText(before, after);
+      });
+    });
+
+    // 导出文件
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const blob = new Blob([mdInput.value], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `EMD-${Date.now()}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // 切换布局
+    document.getElementById('toggleLayout').addEventListener('click', () => {
+      document.getElementById('container').classList.toggle('vertical');
+    });
+
+    // 撤回操作
+    document.getElementById('undoBtn').addEventListener('click', () => {
+      if (undoStack.length > 0) {
+        isUndoRedo = true;
+        redoStack.push(mdInput.value);
+        const previous = undoStack.pop();
+        mdInput.value = previous;
+        lastValue = previous;
+        mdInput.dispatchEvent(new Event('input'));
+        isUndoRedo = false;
+      }
+    });
+
+    // 前进操作
+    document.getElementById('redoBtn').addEventListener('click', () => {
+      if (redoStack.length > 0) {
+        isUndoRedo = true;
+        undoStack.push(mdInput.value);
+        const next = redoStack.pop();
+        mdInput.value = next;
+        lastValue = next;
+        mdInput.dispatchEvent(new Event('input'));
+        isUndoRedo = false;
+      }
+    });
+
+    // 初始化默认内容
+    mdInput.value = `## 欢迎使用
+<details>
+<summary>💭 <b>一些话 (点击展开)</b></summary>
+
+**功能特性：**
+- 实时预览
+- 快捷工具栏
+- 多格式支持
+- 响应式布局
+
+[主页](https://ericq.rth1.xyz/)
+
+\`\`\`javascript
+console.log('Hello Markdown!');
+\`\`\`
+
+![Loading图片测试](img/Loading.svg)
+</details>
+`;
+    mdInput.dispatchEvent(new Event('input'));
+  </script>
+</body>
+</html>
